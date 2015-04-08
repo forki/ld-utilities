@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact name="ComLLODE:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ComLLODE_jar</output-path>
+    <root id="root">
+      <element id="archive" name="ComLLODE.jar">
+        <element id="module-output" name="ComLLODE" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/aterm-java-1.6.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/jgrapht-jdk1.5.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/owlapi-distribution-3.4.4-bin.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/pellet-core.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/pellet-datatypes.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/pellet-el.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/pellet-owlapiv3.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/pellet-rules.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/libs/saxon9he.jar" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="aterm-java-1.6">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/aterm-java-1.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jgrapht-jdk1.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/owlapi-distribution-3.4.4-bin.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/pellet-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/pellet-datatypes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/pellet-el.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/pellet-owlapiv3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/pellet-rules.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/saxon9he.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libs/pellet-core.jar!/" />
+    </SOURCES>
+  </library>
+</component>
