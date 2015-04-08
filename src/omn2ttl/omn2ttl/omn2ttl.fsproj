@@ -26,26 +26,26 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <Reference Include="IKVM.OpenJDK.Core">
-      <HintPath>..\..\..\packages\IKVM\IKVM.OpenJDK.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="IKVM.OpenJDK.XML.API">
-      <HintPath>..\..\..\packages\IKVM\IKVM.OpenJDK.XML.API.dll</HintPath>
-    </Reference>
-    <Reference Include="IKVM.OpenJDK.XML.Parse">
-      <HintPath>..\..\..\packages\IKVM\IKVM.OpenJDK.XML.Parse.dll</HintPath>
-    </Reference>
-    <Reference Include="IKVM.Runtime">
-      <HintPath>..\..\..\packages\IKVM\IKVM.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="IKVM.Runtime.JNI">
-      <HintPath>..\..\..\packages\IKVM\IKVM.Runtime.JNI.dll</HintPath>
-    </Reference>
-    <Reference Include="owlapi">
-      <HintPath>..\..\..\packages\owlapi\owlapi.dll</HintPath>
-    </Reference>
     <Reference Include="UnionArgParser">
       <HintPath>..\..\..\packages\UnionArgParser\lib\net40\UnionArgParser.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Core">
+      <HintPath>..\..\..\lib\IKVM\IKVM.OpenJDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.API">
+      <HintPath>..\..\..\lib\IKVM\IKVM.OpenJDK.XML.API.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Parse">
+      <HintPath>..\..\..\lib\IKVM\IKVM.OpenJDK.XML.Parse.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.Runtime">
+      <HintPath>..\..\..\lib\IKVM\IKVM.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.Runtime.JNI">
+      <HintPath>..\..\..\lib\IKVM\IKVM.Runtime.JNI.dll</HintPath>
+    </Reference>
+    <Reference Include="owlapi">
+      <HintPath>..\..\..\lib\owlapi\owlapi.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
