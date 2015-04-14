@@ -1,7 +1,9 @@
-﻿#r "../../../packages/dotNetRDF/lib/net40/dotNetRDF.dll"
+#I "../../../packages"
+#r "../../../packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 #r "../../../packages/FSharp.RDF/lib/net40/FSharp.RDF.dll"
 #r "../../../packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 #r "../../../packages/VDS.Common/lib/net40-client/VDS.Common.dll"
+#r "../../../packages/dotNetRDF/lib/net40/dotNetRDF.dll"
 
 open VDS.Common
 open FSharp.Data
@@ -11,16 +13,21 @@ open graph
 open rdf
 
 
-type csv = FSharp.Data.CsvProvider< Sample="First (string), Second (string), Third (string)" >
+let mkTuple (r:CsvRow) =
+  let c = r.Columns.Length
+  match c with
+    | 1 -> (r.[0], "", "")
+    | 3 -> (r.[0], r.[1], r.[2])
+    | _ -> ("","","")
 
-let loadCsv(p : string) = csv.Load(p)
+
+let loadCsv(p : string) = CsvFile.Load(p)
 
 let rSpaces(x : string * string * string) =
     match x with
     | (x, y, z) ->
         (x.Replace(' ', '-'), y.Replace(' ', '-'), z.Replace(' ', '-'))
 
-let mkTuple(r : csv.Row) = rSpaces(r.First, r.Second, r.Third)
 
 let (|SeqEmpty|SeqCons|)(xs : 'a seq) =
     if Seq.isEmpty xs then SeqEmpty
@@ -70,10 +77,15 @@ let toConcept(ax : string list) =
                    [dataProperty !"skos:prefLabel" (x ^^ xsd.string);
                     objectProperty !"skos:narrower" !(sprintf "qsc:%s" y)]]
 
+
+
+let csv = loadCsv "csv file path"
+for i in csv.Rows do
+  printfn "%A" (mkTuple i)
+
 let g = graph.empty (!"http://nice.org.uk/ns/qualitystandard") []
-let csv = loadCsv ""
 toPaths csv.Rows []
 |> List.collect toConcept
 |> Assert.resources g
-|> graph.format graph.write.ttl (graph.toFile "")
+|> graph.format graph.write.ttl (graph.toFile "C:\\test.ttl")
 |> ignore

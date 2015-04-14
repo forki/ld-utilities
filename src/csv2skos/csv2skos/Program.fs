@@ -1,6 +1,4 @@
-﻿// Learn more about F# at http://fsharp.net
-// See the 'F# Tutorial' project for more help.
-module csvskos =
+﻿module csvskos =
     open System
     open FSharp.Data
     open FSharp.RDF
@@ -8,14 +6,18 @@ module csvskos =
     open rdf
     open graph
 
-    type csv = FSharp.Data.CsvProvider<Sample="First (string), Second (string), Third (string)">
-    let loadCsv(p : string) = csv.Load(p)
-        
+    let loadCsv(p : string) = CsvFile.Load(p)
+  
     let rSpaces (x:(string*string*string)) =
         match x with
         | (x,y,z) -> (x.Replace(' ', '-'), y.Replace(' ', '-'), z.Replace(' ', '-'))
 
-    let mkTuple(r : csv.Row) = rSpaces (r.First, r.Second, r.Third)
+    let mkTuple (r:CsvRow) =
+        let c = r.Columns.Length
+        match c with
+        | 1 -> rSpaces (r.[0], "", "")
+        | 3 -> rSpaces (r.[0], r.[1], r.[2])
+        | _ -> ("","","")
 
     let (|SeqEmpty|SeqCons|)(xs : 'a seq) =
         if Seq.isEmpty xs then SeqEmpty
@@ -39,8 +41,6 @@ module csvskos =
       | SeqCons((NE v, E, E),xs), [a;b] -> yield! next [v] xs
       | SeqCons(x,_),p -> printfn "%A %A" x p
      ]
-
-
 
     let toConcept(ax : string list) = [
         match ax with
