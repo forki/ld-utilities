@@ -42,35 +42,38 @@
       | SeqCons(x,_),p -> printfn "%A %A" x p
      ]
 
-    let toConcept(ax : string list) = [
+    let idOf (x:string) =
+      !(sprintf "qsc:%s" (x.Replace("&", "and")))
+
+    let toConcept b ax = [
         match ax with
          | [x] ->
-             yield owl.individual !(sprintf "qsc:%s" x) [!"skos:Concept"]
+             yield owl.individual (idOf x) [b]
                        [dataProperty !"skos:prefLabel" (x ^^ xsd.string)]
          | [y; x] ->
-             yield owl.individual !(sprintf "qsc:%s" x) [!"skos:Concept"]
-                       [objectProperty !"skos:broader" !(sprintf "qsc:%s" y)]
-             yield owl.individual !(sprintf "qsc:%s" y) [!"skos:Concept"]
+             yield owl.individual (idOf x) [b]
+                       [objectProperty !"skos:broader" (idOf y)]
+             yield owl.individual (idOf y) [b]
                        [dataProperty !"skos:prefLabel" (x ^^ xsd.string);
-                        objectProperty !"skos:narrower" !(sprintf "qsc:%s" x)]
+                        objectProperty !"skos:narrower" (idOf x)]
          | [z; y; x] ->
-             yield owl.individual !(sprintf "qsc:%s" x) [!"skos:Concept"]
-                       [objectProperty !"skos:broader" !(sprintf "qsc:%s" y)]
+             yield owl.individual (idOf x) [b]
+                       [objectProperty !"skos:broader" (idOf y)]
 
-             yield owl.individual !(sprintf "qsc:%s" z) [!"skos:Concept"]
+             yield owl.individual (idOf z) [b]
                        [dataProperty !"skos:prefLabel" (x ^^ xsd.string);
-                        objectProperty !"skos:narrower" !(sprintf "qsc:%s" y)]
+                        objectProperty !"skos:narrower" (idOf y)]
 
-             yield owl.individual !(sprintf "qsc:%s" y) [!"skos:Concept"]
-                       [objectProperty !"skos:broader" !(sprintf "qsc:%s" z)]
+             yield owl.individual (idOf y) [b]
+                       [objectProperty !"skos:broader" (idOf z)]
 
-             yield owl.individual !(sprintf "qsc:%s" y) [!"skos:Concept"]
+             yield owl.individual (idOf y) [b]
                        [dataProperty !"skos:prefLabel" (x ^^ xsd.string);
-                        objectProperty !"skos:narrower" !(sprintf "qsc:%s" x)]
+                        objectProperty !"skos:narrower" (idOf x)]
 
-             yield owl.individual !(sprintf "qsc:%s" z) [!"skos:Concept"]
+             yield owl.individual (idOf z) [b]
                        [dataProperty !"skos:prefLabel" (x ^^ xsd.string);
-                        objectProperty !"skos:narrower" !(sprintf "qsc:%s" y)]]
+                        objectProperty !"skos:narrower" (idOf y)]]
 
 open Nessos.UnionArgParser
 open System
@@ -82,27 +85,33 @@ open graph
 
 type CommandArguments =
     | Uri of string
+    | BaseConcept of string
     interface IArgParserTemplate with
         member u.Usage =
             match u with
             | Uri _ -> "Specify a file"
+            | BaseConcept _ -> "The base class for this skos"
+
 
 [<EntryPoint>]
 let main argv =
     let parser = UnionArgParser.Create<CommandArguments>()
     let argv = parser.Parse(argv)
     let csvLocation = argv.GetResult(<@ CommandArguments.Uri @>)
-    let g = graph.empty (!"http://nice.org.uk/ns/qualitystandard") []
+    let baseConcept = argv.GetResult(<@ CommandArguments.BaseConcept @>)
+    let g = graph.empty (!"http://nice.org.uk/ns/qualitystandard")
+                        [("qsc",!"http://nice.org.uk/ns/qualitystandard/skos#")
+                         ("skos",!"http://www.w3.org/2004/02/skos/core#")
+                        ]
+
     let csv = csvskos.loadCsv csvLocation
     let startTrim = csvLocation.LastIndexOf('/')+1
     let writeTo = csvLocation.Substring(0, csvLocation.LastIndexOf('/')+1)
     let fileName = csvLocation.Substring(startTrim, csvLocation.LastIndexOf('.')-startTrim)
 
     csvskos.toPaths csv.Rows []
-    |> List.collect csvskos.toConcept
+    |> List.collect (csvskos.toConcept !baseConcept)
     |> Assert.resources g
     |> graph.format graph.write.ttl (graph.toFile (writeTo+fileName+".ttl"))
     |> ignore
     0 // return an integer exit code
-
-    
