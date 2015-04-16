@@ -101,6 +101,7 @@ let main argv =
     let baseConcept = argv.GetResult(<@ CommandArguments.BaseConcept @>)
     let g = graph.empty (!"http://nice.org.uk/ns/qualitystandard")
                         [("qsc",!"http://nice.org.uk/ns/qualitystandard/skos#")
+                         ("qs",!"http://nice.org.uk/ns/qualitystandard#")
                          ("skos",!"http://www.w3.org/2004/02/skos/core#")
                         ]
 
