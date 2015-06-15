@@ -37,7 +37,7 @@
         with
         | :? OWLOntologyAlreadyExistsException as e ->
             Success(Ontology(oM.getOntology(e.getDocumentIRI()))) //doesnt work at the moment
-        | ex -> Error(ex.Message)
+        | ex -> Error(sprintf "%s \n %s" ex.Message ex.StackTrace)
 
     let translate ont p fname =
         let fileToWrite = File(p + fname + ".ttl")
@@ -61,6 +61,6 @@ let main argv =
     match Owl.loadFromFile fin with
     | Owl.Error e ->
         printfn "%s" e
-        exit 0
+        exit 1
     | Owl.Success ont -> Owl.translate ont writeTo fileName
     0 // return an integer exit code
