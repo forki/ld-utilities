@@ -99,7 +99,7 @@ let main argv =
     let argv = parser.Parse(argv)
     let csvLocation = argv.GetResult(<@ CommandArguments.Uri @>)
     let baseConcept = argv.GetResult(<@ CommandArguments.BaseConcept @>)
-    let g = graph.empty (!"http://nice.org.uk/ns/qualitystandard")
+    let g = Graph.empty (!"http://nice.org.uk/ns/qualitystandard")
                         [("qsc",!"http://nice.org.uk/ns/qualitystandard/skos#")
                          ("qs",!"http://nice.org.uk/ns/qualitystandard#")
                          ("skos",!"http://www.w3.org/2004/02/skos/core#")
@@ -109,10 +109,9 @@ let main argv =
     let startTrim = csvLocation.LastIndexOf('/')+1
     let writeTo = csvLocation.Substring(0, csvLocation.LastIndexOf('/')+1)
     let fileName = csvLocation.Substring(startTrim, csvLocation.LastIndexOf('.')-startTrim)
-
     csvskos.toPaths csv.Rows []
     |> List.collect (csvskos.toConcept !baseConcept)
-    |> Assert.resources g
-    |> graph.format graph.write.ttl (graph.toFile (writeTo+fileName+".ttl"))
+    |> Assert.graph g
+    |> Graph.writeTtl (toFile (writeTo+fileName+".ttl"))
     |> ignore
     0 // return an integer exit code
