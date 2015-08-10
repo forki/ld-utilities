@@ -83,6 +83,14 @@ let mapSnomed file prefix =
                     [objectProperty !!"owl:sameAs" !!("http://bioportal.bioontology.org/ontologies/SNOMEDCT/" + r.Columns.[1])])
 
 
+let mapSynonyms file prefix =
+    let syn = CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
+    syn.Rows
+    |> Seq.map (fun r ->
+                    rdf.resource !!(prefix + r.Columns.[0])
+                        [dataProperty !!"http://www.w3.org/2004/02/skos/core#altLabel" (r.Columns.[1]^^xsd.string)])
+
+
 do
 
   let sb = System.Text.StringBuilder()
@@ -98,7 +106,9 @@ do
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acne> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                         owl:Class;
                                                                       rdfs:label "Acne"^^xsd:string;
-                                                                      owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/88616000>.
+                                                                      owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/88616000>;
+                                                                      <http://www.w3.org/2004/02/skos/core#altLabel> "Acne vulgaris"^^xsd:string,
+                                                                                                                     "Common acne"^^xsd:string.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acute%20coronary%20syndromes> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                                                 owl:Class;
                                                                                               rdfs:label "Acute coronary syndromes"^^xsd:string;
@@ -108,12 +118,15 @@ do
                                                                            rdfs:label "Addiction"^^xsd:string.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                                                           owl:Class;
-                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string.""")
+                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string.
+""")
 
   ()
 
   let g = typesFor "./sample.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#" "ConditionsAndDiseases"
   let g = mapSnomed "./SampleSkosDef.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
+          |> Assert.graph g
+  let g = mapSynonyms "./SampleSynonyms.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
           |> Assert.graph g
   let d = Graph.diff g g'
 
