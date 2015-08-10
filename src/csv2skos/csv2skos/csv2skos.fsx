@@ -72,11 +72,22 @@ let typesFor file prefix ancestor =
     |> Seq.toList
     |> owlGen prefix (newContext (0, ancestor))
     |> Assert.graph g
+
+
+
+let mapSnomed file prefix =
+    let skosDefs = CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
+    skosDefs.Rows
+    |> Seq.map (fun r ->
+                rdf.resource !!(prefix + r.Columns.[0])
+                    [objectProperty !!"owl:sameAs" !!("http://bioportal.bioontology.org/ontologies/SNOMEDCT/" + r.Columns.[1])])
+
+
 do
 
   let sb = System.Text.StringBuilder()
   let g' = Graph.loadTtl (fromString """
- @base <http://ld.nice.org.uk/ns/qualitystandards>.
+@base <http://ld.nice.org.uk/ns/qualitystandards>.
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
@@ -86,20 +97,24 @@ do
 
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acne> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                         owl:Class;
-                                                                      rdfs:label "Acne"^^xsd:string.
+                                                                      rdfs:label "Acne"^^xsd:string;
+                                                                      owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/88616000>.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acute%20coronary%20syndromes> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                                                 owl:Class;
-                                                                                              rdfs:label "Acute coronary syndromes"^^xsd:string.
+                                                                                              rdfs:label "Acute coronary syndromes"^^xsd:string;
+                                                                                              owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/394659003>.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Addiction> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                              owl:Class;
                                                                            rdfs:label "Addiction"^^xsd:string.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                                                           owl:Class;
-                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string .
-""")
+                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string.""")
+
   ()
 
   let g = typesFor "./sample.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#" "ConditionsAndDiseases"
+  let g = mapSnomed "./SampleSkosDef.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
+          |> Assert.graph g
   let d = Graph.diff g g'
 
   Graph.writeTtl (toString sb) g
@@ -108,3 +123,4 @@ do
 
   if not d.AreEqual then
     failwithf "Sample graph doesn't match  %s" ((string) d)
+
