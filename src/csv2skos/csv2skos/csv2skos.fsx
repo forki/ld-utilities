@@ -73,8 +73,10 @@ let typesFor file prefix ancestor =
     |> owlGen prefix (newContext (0, ancestor))
     |> Assert.graph g
 do
+
+  let sb = System.Text.StringBuilder()
   let g' = Graph.loadTtl (fromString """
-                           @base <http://ld.nice.org.uk/ns/qualitystandards>.
+ @base <http://ld.nice.org.uk/ns/qualitystandards>.
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
@@ -91,16 +93,18 @@ do
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Addiction> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                              owl:Class;
                                                                            rdfs:label "Addiction"^^xsd:string.
-<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a <http://ld.nice.org.uk/ns/qualitystandard/conditionARSEsanddiseases#ConditionsAndDiseases>,
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
                                                                                                           owl:Class;
-                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string.
+                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string .
 """)
   ()
 
-
-
-
   let g = typesFor "./sample.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#" "ConditionsAndDiseases"
   let d = Graph.diff g g'
+
+  Graph.writeTtl (toString sb) g
+
+  printfn "Graph is %s" (string sb)
+
   if not d.AreEqual then
     failwithf "Sample graph doesn't match  %s" ((string) d)
