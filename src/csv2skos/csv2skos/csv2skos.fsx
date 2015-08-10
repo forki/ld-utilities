@@ -64,14 +64,12 @@ let newContext a = {
 
 let typesFor file prefix ancestor =
     let csv = FSharp.Data.CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
-    let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandards" []
     csv.Rows
     |> Seq.map (fun a -> a.Columns)
     |> Seq.map Array.toList
     |> Seq.map (depthTuple 1)
     |> Seq.toList
     |> owlGen prefix (newContext (0, ancestor))
-    |> Assert.graph g
 
 
 
@@ -81,7 +79,7 @@ let mapSnomed file prefix =
     |> Seq.map (fun r ->
                 rdf.resource !!(prefix + r.Columns.[0])
                     [objectProperty !!"owl:sameAs" !!("http://bioportal.bioontology.org/ontologies/SNOMEDCT/" + r.Columns.[1])])
-
+    |> Seq.toList
 
 let mapSynonyms file prefix =
     let syn = CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
@@ -89,10 +87,10 @@ let mapSynonyms file prefix =
     |> Seq.map (fun r ->
                     rdf.resource !!(prefix + r.Columns.[0])
                         [dataProperty !!"http://www.w3.org/2004/02/skos/core#altLabel" (r.Columns.[1]^^xsd.string)])
-
+    |> Seq.toList
 
 do
-
+  let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
   let sb = System.Text.StringBuilder()
   let g' = Graph.loadTtl (fromString """
 @base <http://ld.nice.org.uk/ns/qualitystandards>.
@@ -123,7 +121,9 @@ do
 
   ()
 
+
   let g = typesFor "./sample.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#" "ConditionsAndDiseases"
+          |> Assert.graph g
   let g = mapSnomed "./SampleSkosDef.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
           |> Assert.graph g
   let g = mapSynonyms "./SampleSynonyms.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
@@ -137,3 +137,26 @@ do
   if not d.AreEqual then
     failwithf "Sample graph doesn't match  %s" ((string) d)
 
+
+let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
+
+[Some "http://ld.nice.org.uk/qualitystandard/agegroup#",Some "AgeGroup",Some "Age groups.csv", Some "Age groups synonyms.csv", None
+ Some "http://ld.nice.org.uk/qualitystandard/conditiondisease#",Some "ConditionDisease",Some "Conditions and diseases.csv", Some "Conditions and diseases synonyms.csv", Some "Conditions and diseases to snomed mapping.csv"
+ Some "http://ld.nice.org.uk/qualitystandard/lifestylecondition#",Some "LifestyleCondition",Some "Lifestyle conditions.csv", Some "Lifestyle conditions synonyms.csv", None
+ Some "http://ld.nice.org.uk/qualitystandard/servicearea#",Some "ServiceArea",Some "Service areas.csv", Some "Service area synonyms.csv", None
+ Some "http://ld.nice.org.uk/qualitystandard/setting#",Some "Setting",Some "Settings.csv", Some "Settings synonyms.csv", None
+ ]
+|> List.collect(fun ( Some prefix,Some root,Some types, Some synonyms, snomed ) ->
+                [
+                  typesFor ( "../skoscsv" ++ types )  prefix root
+                  mapSynonyms ("../skoscsv" ++ synonyms) prefix
+                  Option.toList snomed |> List.collect (fun snomed -> mapSnomed  ("../skoscsv" ++ snomed) prefix)
+                ])
+|> List.iter (Assert.graph g >> ignore)
+
+
+let sb = System.Text.StringBuilder()
+
+Graph.writeTtl (toString sb) g
+
+printf "%s" (string sb)
