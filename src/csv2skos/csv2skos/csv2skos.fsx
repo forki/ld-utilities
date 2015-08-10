@@ -15,31 +15,28 @@ open rdf
 
 let (++) a b = System.IO.Path.Combine(a,b)
 
-let csv = FSharp.Data.CsvFile.Load(__SOURCE_DIRECTORY__ ++ "../csv2skos/sample.csv")
 
 let rec depthTuple c xs =
   match xs with
     | ""::xs -> depthTuple (c+1) xs
     | x::_ -> (c,x)
 
-
 type context = { parent: int * string
                  previous: int * string
                  grandparents: (int * string) list
-                 }
+}
 
-let createOwlResource label parentLabel =
-    owl.cls !!("http://ld.nice.org.uk/qualitystandards/conditionanddisease#" + label) [
-    !!("http://ld.nice.org.uk/qualitystandards#" + parentLabel)
+let createOwlResource prefix label parentLabel =
+    owl.cls !!(prefix + label) [
+    !!(prefix + parentLabel)
     ] [
     dataProperty !!"rdfs:label" (label ^^xsd.string)
     ]
 
-let moveParent (context:context) tuples  =
+let moveParent context tuples  =
   match context, tuples with
     | _,[] -> context
     | { parent= (parentDepth,_); previous= previous; grandparents=grandparents}, (depth, label)::_ ->
-      printfn "d %d" ( depth-parentDepth )
       match depth-parentDepth with
         | 2 -> {context with
                     parent = previous
@@ -51,44 +48,59 @@ let moveParent (context:context) tuples  =
                     grandparents= List.tail grandparents}
         | _ -> {context with previous = (depth,label)}
 
-let rec owlGen (context:context) tuples =
+let rec owlGen prefix context tuples =
   match tuples with
   | [] -> []
   | (depth, label)::tail ->
     let context' = moveParent context tuples
-    createOwlResource label (snd context'.parent) :: owlGen (moveParent context tuples) tail
+    createOwlResource prefix label (snd context'.parent) :: owlGen prefix (moveParent context tuples) tail
 
 let newContext a = {
   parent=a
   previous=a
   grandparents= []
-     }
+}
 
 
-let g = Graph.empty !!"http://test" []
-let sb = System.Text.StringBuilder()
-csv.Rows
-|> Seq.map (fun a -> a.Columns)
-|> Seq.map Array.toList
-|> Seq.map (depthTuple 1)
-|> Seq.toList
-|> owlGen (newContext (0, "0-0"))
-|> Assert.graph g
-|> Graph.writeTtl (toString sb)
+let typesFor file prefix ancestor =
+    let csv = FSharp.Data.CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
+    let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandards" []
+    csv.Rows
+    |> Seq.map (fun a -> a.Columns)
+    |> Seq.map Array.toList
+    |> Seq.map (depthTuple 1)
+    |> Seq.toList
+    |> owlGen prefix (newContext (0, ancestor))
+    |> Assert.graph g
+do
+  let g' = Graph.loadTtl (fromString """
+                           @base <http://ld.nice.org.uk/ns/qualitystandards>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix base: <http://ld.nice.org.uk/ns/qualitystandards>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acne> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
+                                                                        owl:Class;
+                                                                      rdfs:label "Acne"^^xsd:string.
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acute%20coronary%20syndromes> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
+                                                                                                owl:Class;
+                                                                                              rdfs:label "Acute coronary syndromes"^^xsd:string.
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Addiction> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
+                                                                             owl:Class;
+                                                                           rdfs:label "Addiction"^^xsd:string.
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a <http://ld.nice.org.uk/ns/qualitystandard/conditionARSEsanddiseases#ConditionsAndDiseases>,
+                                                                                                          owl:Class;
+                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string.
+""")
+  ()
 
 
-//test cases
-let context = newContext (0, "0-0")
 
-let context' = moveParent context [(1, "1-1")]
-let test1 = context' = {parent=(0, "0-0"); previous=(1, "1-1");grandparents=[]}
 
-let context'' = moveParent context' [(2, "2-1")]
-let test2 = context'' = {parent=(1, "1-1"); previous=(2, "2-1");grandparents=[(0, "0-0")]}
-
-let context''' = moveParent context'' [(2, "2-2")]
-let test3 = context''' = { parent=(1,"1-1"); previous=(2, "2-2"); grandparents=[(0,"0-0")]}
-
-let context'''' = moveParent context''' [1,("1-2")]
-let test4 = context'''' = { parent=(0,"0-0"); previous=(1,"1-2"); grandparents=[]}
-
+  let g = typesFor "./sample.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#" "ConditionsAndDiseases"
+  let d = Graph.diff g g'
+  if not d.AreEqual then
+    failwithf "Sample graph doesn't match  %s" ((string) d)
