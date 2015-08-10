@@ -7,7 +7,7 @@
     open graph
 
     let loadCsv(p : string) = CsvFile.Load(p)
-  
+
     let rSpaces (x:(string*string*string)) =
         match x with
         | (x,y,z) -> (x.Replace(' ', '-'), y.Replace(' ', '-'), z.Replace(' ', '-'))
