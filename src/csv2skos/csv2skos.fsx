@@ -139,6 +139,7 @@ do
 
 
 let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
+let fPath = "../../../csvskos"
 
 [Some "http://ld.nice.org.uk/qualitystandard/agegroup#",Some "AgeGroup",Some "Age groups.csv", Some "Age groups synonyms.csv", None
  Some "http://ld.nice.org.uk/qualitystandard/conditiondisease#",Some "ConditionDisease",Some "Conditions and diseases.csv", Some "Conditions and diseases synonyms.csv", Some "Conditions and diseases to snomed mapping.csv"
@@ -148,9 +149,9 @@ let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
  ]
 |> List.collect(fun ( Some prefix,Some root,Some types, Some synonyms, snomed ) ->
                 [
-                  typesFor ( "../skoscsv" ++ types )  prefix root
-                  mapSynonyms ("../skoscsv" ++ synonyms) prefix
-                  Option.toList snomed |> List.collect (fun snomed -> mapSnomed  ("../skoscsv" ++ snomed) prefix)
+                  typesFor ( fPath ++ types )  prefix root
+                  mapSynonyms (fPath ++ synonyms) prefix
+                  Option.toList snomed |> List.collect (fun snomed -> mapSnomed  (fPath ++ snomed) prefix)
                 ])
 |> List.iter (Assert.graph g >> ignore)
 
