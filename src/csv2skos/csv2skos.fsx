@@ -1,6 +1,7 @@
 #I "../../packages"
 #r "../../packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 #r "../../packages/dotNetRDF/lib/net40/dotNetRDF.dll"
+#r "../../packages/dotNetRDF/lib/dotNetRDF.dll"
 #r "../../packages/VDS.Common/lib/net40-client/VDS.Common.dll"
 #I "../../packages/FSharp.RDF/lib"
 #r "../../packages/FSharp.RDF/lib/FSharp.RDF.dll"
