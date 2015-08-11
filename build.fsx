@@ -354,7 +354,7 @@ Target "All" DoNothing
 #endif
   ==> "NuGet"
   ==> "BuildPackage"
-
+(**
 "CleanDocs"
   ==> "GenerateHelp"
   ==> "GenerateReferenceDocs"
@@ -362,7 +362,7 @@ Target "All" DoNothing
 
 "CleanDocs"
   ==> "GenerateHelpDebug"
-
+**)
 "GenerateHelp"
   ==> "KeepRunning"
     
