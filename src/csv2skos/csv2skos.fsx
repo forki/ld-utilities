@@ -15,6 +15,7 @@ open rdf
 
 let (++) a b = System.IO.Path.Combine(a,b)
 
+let fPath = "../../../csvskos"
 
 let rec depthTuple c xs =
   match xs with
@@ -61,9 +62,8 @@ let newContext a = {
   grandparents= []
 }
 
-
 let typesFor file prefix ancestor =
-    let csv = FSharp.Data.CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
+    let csv = FSharp.Data.CsvFile.Load(__SOURCE_DIRECTORY__ ++ fPath ++ file)
     csv.Rows
     |> Seq.map (fun a -> a.Columns)
     |> Seq.map Array.toList
@@ -74,7 +74,7 @@ let typesFor file prefix ancestor =
 
 
 let mapSnomed file prefix =
-    let skosDefs = CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
+    let skosDefs = CsvFile.Load(__SOURCE_DIRECTORY__ ++ fPath ++ file)
     skosDefs.Rows
     |> Seq.map (fun r ->
                 rdf.resource !!(prefix + r.Columns.[0])
@@ -82,7 +82,7 @@ let mapSnomed file prefix =
     |> Seq.toList
 
 let mapSynonyms file prefix =
-    let syn = CsvFile.Load(__SOURCE_DIRECTORY__ ++ file)
+    let syn = CsvFile.Load(__SOURCE_DIRECTORY__ ++ fPath ++ file)
     syn.Rows
     |> Seq.map (fun r ->
                     rdf.resource !!(prefix + r.Columns.[0])
@@ -139,7 +139,6 @@ do
 
 
 let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
-let fPath = "../../../csvskos"
 
 [Some "http://ld.nice.org.uk/qualitystandard/agegroup#",Some "AgeGroup",Some "Age groups.csv", Some "Age groups synonyms.csv", None
  Some "http://ld.nice.org.uk/qualitystandard/conditiondisease#",Some "ConditionDisease",Some "Conditions and diseases.csv", Some "Conditions and diseases synonyms.csv", Some "Conditions and diseases to snomed mapping.csv"
