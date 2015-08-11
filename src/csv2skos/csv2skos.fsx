@@ -1,9 +1,9 @@
 #I "../../packages"
 #r "../../packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#r "../../packages/dotNetRDF/lib/net40/dotNetRDF.dll"
+#r "../../packages/VDS.Common/lib/net40-client/VDS.Common.dll"
 #I "../../packages/FSharp.RDF/lib"
 #r "../../packages/FSharp.RDF/lib/FSharp.RDF.dll"
-#r "../../packages/VDS.Common/lib/net40-client/VDS.Common.dll"
-#r "../../packages/dotNetRDF/lib/net40/dotNetRDF.dll"
 
 
 open VDS.Common
@@ -15,7 +15,7 @@ open rdf
 
 let (++) a b = System.IO.Path.Combine(a,b)
 
-let fPath = "../../../csvskos"
+let fPath = "../../../skoscsv"
 
 let rec depthTuple c xs =
   match xs with
@@ -63,7 +63,7 @@ let newContext a = {
 }
 
 let typesFor file prefix ancestor =
-    let csv = FSharp.Data.CsvFile.Load(__SOURCE_DIRECTORY__ ++ fPath ++ file)
+    let csv = FSharp.Data.CsvFile.Load(__SOURCE_DIRECTORY__  ++ file)
     csv.Rows
     |> Seq.map (fun a -> a.Columns)
     |> Seq.map Array.toList
@@ -74,7 +74,7 @@ let typesFor file prefix ancestor =
 
 
 let mapSnomed file prefix =
-    let skosDefs = CsvFile.Load(__SOURCE_DIRECTORY__ ++ fPath ++ file)
+    let skosDefs = CsvFile.Load(__SOURCE_DIRECTORY__  ++ file)
     skosDefs.Rows
     |> Seq.map (fun r ->
                 rdf.resource !!(prefix + r.Columns.[0])
@@ -82,7 +82,7 @@ let mapSnomed file prefix =
     |> Seq.toList
 
 let mapSynonyms file prefix =
-    let syn = CsvFile.Load(__SOURCE_DIRECTORY__ ++ fPath ++ file)
+    let syn = CsvFile.Load(__SOURCE_DIRECTORY__  ++ file)
     syn.Rows
     |> Seq.map (fun r ->
                     rdf.resource !!(prefix + r.Columns.[0])
@@ -122,11 +122,11 @@ do
   ()
 
 
-  let g = typesFor "./sample.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#" "ConditionsAndDiseases"
+  let g = typesFor "sample.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#" "ConditionsAndDiseases"
           |> Assert.graph g
-  let g = mapSnomed "./SampleSkosDef.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
+  let g = mapSnomed "SampleSkosDef.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
           |> Assert.graph g
-  let g = mapSynonyms "./SampleSynonyms.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
+  let g = mapSynonyms "SampleSynonyms.csv" "http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#"
           |> Assert.graph g
   let d = Graph.diff g g'
 
