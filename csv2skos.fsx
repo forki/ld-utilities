@@ -138,22 +138,22 @@ do let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
 
 let g = Graph.unnamed []
 
-[ Some "http://ld.nice.org.uk/qualitystandard/agegroup#", Some "AgeGroup",
+[ Some "http://ld.nice.org.uk/ns/qualitystandard/agegroup#", Some "AgeGroup",
   Some "Age groups.csv", Some "Age groups synonyms.csv", None
 
-  Some "http://ld.nice.org.uk/qualitystandard/conditiondisease#",
+  Some "http://ld.nice.org.uk/ns/qualitystandard/conditiondisease#",
   Some "ConditionDisease", Some "Conditions and diseases.csv",
   Some "Conditions and diseases synonyms.csv",
   Some "Conditions and diseases to snomed mapping.csv"
 
-  Some "http://ld.nice.org.uk/qualitystandard/lifestylecondition#",
+  Some "http://ld.nice.org.uk/ns/qualitystandard/lifestylecondition#",
   Some "LifestyleCondition", Some "Lifestyle conditions.csv",
   Some "Lifestyle conditions synonyms.csv", None
 
-  Some "http://ld.nice.org.uk/qualitystandard/servicearea#", Some "ServiceArea",
+  Some "http://ld.nice.org.uk/ns/qualitystandard/servicearea#", Some "ServiceArea",
   Some "Service areas.csv", Some "Service area synonyms.csv", None
 
-  Some "http://ld.nice.org.uk/qualitystandard/setting#", Some "Setting",
+  Some "http://ld.nice.org.uk/ns/qualitystandard/setting#", Some "Setting",
   Some "Settings.csv", Some "Settings synonyms.csv", None ]
 |> List.collect
      (fun ((Some prefix), (Some root), (Some types), (Some synonyms), snomed) ->
