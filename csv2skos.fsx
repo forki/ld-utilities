@@ -27,8 +27,9 @@ type context =
     grandparents : (int * string) list }
 
 let createOwlResource prefix label parentLabel =
-  owl.cls !!(prefix + label) [ !!(prefix + parentLabel) ]
-    [ dataProperty !!"rdfs:label" (label ^^ xsd.string) ]
+  owl.cls !!(prefix + label) []
+    [ dataProperty !!"rdfs:label" (label ^^ xsd.string)
+      objectProperty !!"rdfs:subClassOf" !!(prefix + parentLabel) ]
 
 let moveParent context tuples =
   match context, tuples with
@@ -92,30 +93,30 @@ let mapSynonyms (file:string) prefix =
 do let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
    let sb = System.Text.StringBuilder()
    let g' = Graph.loadTtl (fromString """
-@base <http://ld.nice.org.uk/ns/qualitystandards>.
+@base <http://ld.nice.org.uk/ns/qualitystandard>.
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix base: <http://ld.nice.org.uk/ns/qualitystandards>.
+@prefix base: <http://ld.nice.org.uk/ns/qualitystandard>.
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 
-<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acne> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
-                                                                        owl:Class;
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acne> a owl:Class;
                                                                       rdfs:label "Acne"^^xsd:string;
+                                                                      rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>;
                                                                       owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/88616000>;
                                                                       <http://www.w3.org/2004/02/skos/core#altLabel> "Acne vulgaris"^^xsd:string,
                                                                                                                      "Common acne"^^xsd:string.
-<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acute%20coronary%20syndromes> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
-                                                                                                owl:Class;
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acute%20coronary%20syndromes> a owl:Class;
                                                                                               rdfs:label "Acute coronary syndromes"^^xsd:string;
+                                                                                              rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>;
                                                                                               owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/394659003>.
-<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Addiction> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
-                                                                             owl:Class;
-                                                                           rdfs:label "Addiction"^^xsd:string.
-<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>,
-                                                                                                          owl:Class;
-                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string.
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Addiction> a owl:Class;
+                                                                           rdfs:label "Addiction"^^xsd:string;
+                                                                           rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>.
+<http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a owl:Class;
+                                                                                                        rdfs:label "Age related macular degeneration"^^xsd:string;
+                                                                                                        rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>.
 """)
    ()
    let g =
@@ -132,11 +133,10 @@ do let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
      |> Assert.graph g
    let d = Graph.diff g g'
    Graph.writeTtl (toString sb) g
-   printfn "Graph is %s" (string sb)
    if not d.AreEqual then
-     failwithf "Sample graph doesn't match  %s" ((string) d)
+     failwithf "Sample graph doesn't match %s \n ------- \n %s" ((string) d) (string sb)
 
-let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
+let g = Graph.unnamed []
 
 [ Some "http://ld.nice.org.uk/qualitystandard/agegroup#", Some "AgeGroup",
   Some "Age groups.csv", Some "Age groups synonyms.csv", None
