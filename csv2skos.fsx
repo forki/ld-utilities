@@ -41,7 +41,8 @@ let moveParent context tuples =
       { context with parent = previous
                      previous = (depth, label)
                      grandparents = context.parent :: grandparents }
-    | 0 ->
+    | n when n <= 0 ->
+      let grandparents = grandparents |> Seq.skip (abs n) |> Seq.toList
       { context with parent = List.head grandparents
                      previous = (depth, label)
                      grandparents = List.tail grandparents }
