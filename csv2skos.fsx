@@ -137,7 +137,8 @@ do let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
    if not d.AreEqual then
      failwithf "Sample graph doesn't match %s \n ------- \n %s" ((string) d) (string sb)
 
-let g = Graph.unnamed []
+let appendFile (p) = (System.IO.File.AppendText p) :> System.IO.TextWriter
+
 
 [ Some "http://ld.nice.org.uk/ns/qualitystandard/agegroup#", Some "AgeGroup",
   Some "Age groups.csv", Some "Age groups synonyms.csv", None
@@ -156,16 +157,20 @@ let g = Graph.unnamed []
 
   Some "http://ld.nice.org.uk/ns/qualitystandard/setting#", Some "Setting",
   Some "Settings.csv", Some "Settings synonyms.csv", None ]
-|> List.collect
+|> List.map
      (fun ((Some prefix), (Some root), (Some types), (Some synonyms), snomed) ->
-     [ typesFor (fPath ++ types) prefix root
-       mapSynonyms (fPath ++ synonyms) prefix
+     (root.ToLower(), List.concat [ typesFor (fPath ++ types) prefix root
+                                    mapSynonyms (fPath ++ synonyms) prefix
 
-       Option.toList snomed
-       |> List.collect (fun snomed -> mapSnomed (fPath ++ snomed) prefix) ])
-|> List.iter (Assert.graph g >> ignore)
+                                    Option.toList snomed
+                                    |> List.collect (fun snomed -> mapSnomed (fPath ++ snomed) prefix) ]))
+|> List.iter (fun (name,xr) ->
+   let g = Graph.empty !!("http://ld.nice.org.uk/ns/qualitystandard/" + name) []
+   Assert.graph g xr |> ignore
 
-let sb = System.Text.StringBuilder()
+   let fout = root ++ "../ns/qualitystandard" ++ (sprintf "%s.ttl" name)
+   printfn "Write csv derived ontology to %s" fout
 
-Graph.writeTtl (toString sb) g
-printf "%s" (string sb)
+   Graph.writeTtl ( appendFile (fout) ) g
+)
+
