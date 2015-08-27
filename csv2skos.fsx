@@ -76,7 +76,7 @@ let mapSnomed (file:string) prefix =
   |> Seq.map
        (fun r ->
        rdf.resource !!(prefix + r.Columns.[0])
-         [ objectProperty !!"owl:sameAs"
+         [ objectProperty !!"http://www.w3.org/2004/02/skos/core#closeMatch"
              !!("http://bioportal.bioontology.org/ontologies/SNOMEDCT/"
                 + r.Columns.[1]) ])
   |> Seq.toList
@@ -105,13 +105,13 @@ do let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acne> a owl:Class;
                                                                       rdfs:label "Acne"^^xsd:string;
                                                                       rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>;
-                                                                      owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/88616000>;
+                                                                      <http://www.w3.org/2004/02/skos/core#closeMatch> <http://bioportal.bioontology.org/ontologies/SNOMEDCT/88616000>;
                                                                       <http://www.w3.org/2004/02/skos/core#altLabel> "Acne vulgaris"^^xsd:string,
                                                                                                                      "Common acne"^^xsd:string.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acute%20coronary%20syndromes> a owl:Class;
                                                                                               rdfs:label "Acute coronary syndromes"^^xsd:string;
                                                                                               rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>;
-                                                                                              owl:sameAs <http://bioportal.bioontology.org/ontologies/SNOMEDCT/394659003>.
+                                                                                              <http://www.w3.org/2004/02/skos/core#closeMatch> <http://bioportal.bioontology.org/ontologies/SNOMEDCT/394659003>.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Addiction> a owl:Class;
                                                                            rdfs:label "Addiction"^^xsd:string;
                                                                            rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>.
