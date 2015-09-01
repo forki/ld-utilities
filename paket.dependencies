@@ -2,7 +2,7 @@ source https://nuget.org/api/v2
 
 nuget FSharp.Data
 nuget FSharp.Formatting 2.8.0
-nuget FSharp.RDF 1.0.71
+nuget FSharp.RDF 
 nuget FSharpVSPowerTools.Core 1.7.0
 nuget NUnit
 nuget NUnit.Runners

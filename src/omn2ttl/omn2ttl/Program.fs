@@ -52,7 +52,7 @@
 open Nessos.UnionArgParser
 [<EntryPoint>]
 let main argv =
-    let parser = UnionArgParser.Create<Owl.CommandArguments>()
+    let parser = new UnionArgParser<Owl.CommandArguments>()
     let argv = parser.Parse(argv)
     let fin = argv.GetResult(<@ Owl.CommandArguments.Uri @>)
     let startTrim = fin.LastIndexOf('/')+1

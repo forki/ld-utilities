@@ -27,7 +27,7 @@ type context =
     grandparents : (int * string) list }
 
 let createOwlResource prefix label parentLabel =
-  owl.cls !!(prefix + label) []
+  owl.pun !!(prefix + label) []
     [ dataProperty !!"rdfs:label" (label ^^ xsd.string)
       objectProperty !!"rdfs:subClassOf" !!(prefix + parentLabel) ]
 
@@ -86,7 +86,7 @@ let mapSynonyms (file:string) prefix =
   syn.Rows
   |> Seq.map
        (fun r ->
-       rdf.resource !!(prefix + r.Columns.[0])
+       owl.cls !!(prefix + r.Columns.[0]) []
          [ dataProperty !!"http://www.w3.org/2004/02/skos/core#altLabel"
              (r.Columns.[1] ^^ xsd.string) ])
   |> Seq.toList
