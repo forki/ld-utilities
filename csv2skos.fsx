@@ -27,7 +27,7 @@ type context =
     grandparents : (int * string) list }
 
 let createOwlResource prefix label parentLabel =
-  owl.cls !!(prefix + label) []
+  owl.pun !!(prefix + label) []
     [ dataProperty !!"rdfs:label" (label ^^ xsd.string)
       objectProperty !!"rdfs:subClassOf" !!(prefix + parentLabel) ]
 
