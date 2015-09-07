@@ -103,19 +103,24 @@ do let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acne> a owl:Class;
+                                                                      a owl:NamedIndividual;
                                                                       rdfs:label "Acne"^^xsd:string;
                                                                       rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>;
                                                                       <http://www.w3.org/2004/02/skos/core#closeMatch> <http://bioportal.bioontology.org/ontologies/SNOMEDCT/88616000>;
                                                                       <http://www.w3.org/2004/02/skos/core#altLabel> "Acne vulgaris"^^xsd:string,
                                                                                                                      "Common acne"^^xsd:string.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Acute%20coronary%20syndromes> a owl:Class;
+                                                                                              a owl:NamedIndividual;
                                                                                               rdfs:label "Acute coronary syndromes"^^xsd:string;
                                                                                               rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>;
                                                                                               <http://www.w3.org/2004/02/skos/core#closeMatch> <http://bioportal.bioontology.org/ontologies/SNOMEDCT/394659003>.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Addiction> a owl:Class;
+                                                                           a owl:NamedIndividual;
                                                                            rdfs:label "Addiction"^^xsd:string;
                                                                            rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>.
 <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#Age%20related%20macular%20degeneration> a owl:Class;
+
+                                                                                                        a owl:NamedIndividual;
                                                                                                         rdfs:label "Age related macular degeneration"^^xsd:string;
                                                                                                         rdfs:subClassOf <http://ld.nice.org.uk/ns/qualitystandard/conditionsanddiseases#ConditionsAndDiseases>.
 """)
@@ -134,7 +139,7 @@ do let g = Graph.empty !!"http://ld.nice.org.uk/ns/qualitystandard" []
      |> Assert.graph g
    let d = Graph.diff g g'
    Graph.writeTtl (toString sb) g
-   if not d.AreEqual then
+   if not (Diff.equal d) then
      failwithf "Sample graph doesn't match %s \n ------- \n %s" ((string) d) (string sb)
 
 let appendFile (p) = (System.IO.File.AppendText p) :> System.IO.TextWriter
@@ -161,7 +166,6 @@ let appendFile (p) = (System.IO.File.AppendText p) :> System.IO.TextWriter
      (fun ((Some prefix), (Some root), (Some types), (Some synonyms), snomed) ->
      (root.ToLower(), List.concat [ typesFor (fPath ++ types) prefix root
                                     mapSynonyms (fPath ++ synonyms) prefix
-
                                     Option.toList snomed
                                     |> List.collect (fun snomed -> mapSnomed (fPath ++ snomed) prefix) ]))
 |> List.iter (fun (name,xr) ->
