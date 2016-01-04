@@ -148,8 +148,8 @@ let appendFile (p) = (System.IO.File.AppendText p) :> System.IO.TextWriter
 [ Some "http://ld.nice.org.uk/ns/qualitystandard/agegroup#", Some "AgeGroup",
   Some "Age groups.csv", Some "Age groups synonyms.csv", None
 
-  Some "http://ld.nice.org.uk/ns/qualitystandard/conditiondisease#",
-  Some "ConditionDisease", Some "Conditions and diseases.csv",
+  Some "http://ld.nice.org.uk/ns/qualitystandard/conditionordisease#",
+  Some "ConditionOrDisease", Some "Conditions and diseases.csv",
   Some "Conditions and diseases synonyms.csv",
   Some "Conditions and diseases to snomed mapping.csv"
 
