@@ -1,5 +1,5 @@
-#r "../FSharp/ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
-#load "../FSharp/Gubbins.fsx"
+#r "/Users/Nate/_src/ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#load "Gubbins.fsx"
 
 open FSharp.Data
 open System.IO
@@ -70,6 +70,7 @@ let getUrl html qsNo =
   (rUrl out qsNo)
 
 let writeToFile (qs:string) i qStandardNo =
+    printfn "%s %A %A" qs i qStandardNo
   let qsNum = sprintf "%s%s" (workingDir) (qStandardNo)
   if not (Directory.Exists(workingDir) && Directory.Exists(qsNum)) then
     Directory.CreateDirectory(workingDir) |> ignore
