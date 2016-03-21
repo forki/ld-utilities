@@ -11,24 +11,9 @@ let d = """
 ```
 Setting:
     - Test
-``
+```
 #Hello
 """
 
 let md = Markdown.Parse d
-
-
-
-let matchCodeBlock (para:MarkdownParagraph) =
-    match para with
-        | CodeBlock (x,_,_) -> Some true
-        | _ -> None
-
-
-for path in fs do
-    let md = Markdown.Parse(System.IO.File.ReadAllText(path))
-    let ret = seq { for i in md.Paragraphs do yield (matchCodeBlock i)}
-    let hasCodeBlock = ret |> Seq.choose id
-    if(Seq.isEmpty hasCodeBlock) then
-        printfn "%s" path
 
