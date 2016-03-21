@@ -1,0 +1,20 @@
+[
+   {
+        "results": [
+            {
+                "statements": [],
+                "statements/_source": "Url",
+                "statements/_text": "Title"
+            }
+        ]
+   },
+   {
+        "results": [
+            {
+                "statements": "Title",
+                "statements/_source": "Url",
+                "statements/_text": "Title"
+            }
+        ]
+   }
+]
