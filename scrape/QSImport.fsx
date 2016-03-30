@@ -8,7 +8,7 @@ open System
 open System.IO
 open System.Text.RegularExpressions
 
-let writePath = __SOURCE_DIRECTORY__ + "/qualitystandard"
+let writePath = "/Users/Nate/_src/ld-statement-content/qualitystandard"
 
 let (++) x y = Path.Combine(x,y)
 let createDirectory path = if(not (Directory.Exists(path))) then Directory.CreateDirectory(path) |> ignore
@@ -56,7 +56,7 @@ with
         let mutable index = 1;
         let url =
           match standardNo with
-              | x when (x <= 16) ->
+              | x when (x <= 14 && x <> 10 && x <> 9) ->
                   let uriBuilder = ListOfStatementsUrl qs
                   Regex.Replace(uriBuilder,"list-of-quality-statements",
                                               "list-of-statements", RegexOptions.IgnoreCase)
@@ -67,12 +67,17 @@ with
             index <- index + 1 ]
 
 
+
+let filterUnrequired (statementXs : Statement list) =
+    statementXs |> List.filter(fun x -> (not(x.Path.Contains("related-nice-quality-standards"))))
+
+
 //Load standards
 for standard in Standard.List do
     let standardPath = writePath ++ (standard.Number + "/")
     createDirectory standardPath
     //Load statements for standard
-    let statements = Statement.List standard.Number
+    let statements = Statement.List standard.Number |> filterUnrequired
     for statement in statements do
         let statementPath = standardPath ++ ("st" + string statement.Index)
         createDirectory statementPath
@@ -80,19 +85,34 @@ for standard in Standard.List do
         writeFile (statementPath ++ "Statement.html") html
 
 
+Statement.List "qs9"
 
 
+let standardPath = writePath ++ ("qs9" + "/")
+let statements = Statement.List "qs9" |> filterUnrequired
+for statement in statements do
+  let statementPath = standardPath ++ ("st" + string statement.Index)
+  createDirectory statementPath
+  let html = Statement.Crawl statement.Path
+  writeFile (statementPath ++ "Statement.html") html
+
+(**
+
+//total standards - reasonably sorted
+let sorted = Standard.List |> List.sortBy(fun y -> y.Number)
+for standard in sorted do
+    printfn "\n QS Number: %s \t Title: %s \n" standard.Number standard.Title
+printfn "Total: %d" (sorted |> List.length)
 
 
+//bash diagnostic scripts
 
+//empty files
+find . -iname "Statement.html" -empty
 
+//under certain size w/ size
+find . -type f -size -500c -exec ls -lh {} \;
 
-
-
-
-
-//metrics
-// let sorted = Standard.List |> List.sortBy(fun y -> y.Number)
-// for standard in sorted do
-//     printfn "\n QS Number: %s \t Title: %s \n" standard.Number standard.Title
-// printfn "Total: %d" (sorted |> List.length)
+//remove all instances of {.title}
+find . -name "Statement.md" -exec sed -i -e 's/{.title}//g' {} \;
+**)
