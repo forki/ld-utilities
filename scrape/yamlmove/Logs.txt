@@ -1,0 +1,204 @@
+
+//Not in ld-content
+(**
+
+
+let without = File.Retrieve (root + "without")
+let mapToNewPath = File.ReplaceFilePath without "without" "with"
+printfn "Doesnt exist in ld-content"
+mapToNewPath
+|> List.map(fun path -> fileExists path)
+|> List.iter(function
+            | True _ -> ()
+            | False x -> printfn "False: %s" x)
+
+  //Has tables? No yaml had codeblocks
+  /Users/Nate/_src/yamltest/without/qs112/st9/Statement.md
+  /Users/Nate/_src/yamltest/without/qs22/st3/Statement.md
+  /Users/Nate/_src/yamltest/without/qs25/st7/Statement.md
+  /Users/Nate/_src/yamltest/without/qs48/st5/Statement.md
+  /Users/Nate/_src/yamltest/without/qs66/st4/Statement.md
+
+
+  //Was missing before in ld-content, but has been scraped this time round
+  False /Users/Nate/_src/yamltest/with/qs1/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs12/st11/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs19/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs22/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs37/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs47/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs5/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs6/st10/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs6/st15/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs64/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs72/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs98/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs99/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st8/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs100/st9/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs102/st8/Statement.md
+
+  //Not been scraped before this point. Require new annotations
+  False /Users/Nate/_src/yamltest/with/qs103/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs103/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs103/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs103/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs103/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs103/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs104/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs104/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs104/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs104/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs105/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs105/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs105/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs105/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs105/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs105/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs105/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs106/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs106/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs106/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs106/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs106/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs106/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs106/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs107/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs107/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs107/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs107/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs107/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs109/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs109/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs109/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs109/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs109/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs109/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs109/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs110/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs110/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs110/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs110/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs110/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs111/st8/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st8/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs112/st9/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs113/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs113/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs113/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs113/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs113/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs114/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs114/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs114/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs114/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs115/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs115/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs115/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs115/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs115/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs115/st6/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs115/st7/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs116/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs116/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs116/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs116/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs117/st1/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs117/st2/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs117/st3/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs117/st4/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs117/st5/Statement.md
+  False /Users/Nate/_src/yamltest/with/qs117/st6/Statement.md
+**)
+
+
+
+//Cant get title from docs
+Path : /Users/Nate/_src/yamltest/with/qs10/st7/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs108/st2/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs108/st3/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs108/st4/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs108/st5/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs108/st6/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs45/st4/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs75/st4/Statement.md
+Path : /Users/Nate/_src/yamltest/with/qs79/st4/Statement.md
+
+
+//Mismatch on title
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st1/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st2/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st3/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st5/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st6/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st7/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs10/st8/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs108/st2/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs108/st3/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs108/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs108/st5/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs108/st6/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs17/st12/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs17/st13/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs17/st14/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs17/st2/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs17/st3/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs25/st10/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st10/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st11/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st12/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st2/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st3/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st5/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st6/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st7/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st8/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs37/st9/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs40/st6/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs45/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs47/st2/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs47/st3/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs47/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs47/st5/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs47/st6/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs53/st1/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs6/st11/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs6/st12/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs6/st13/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs6/st14/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs6/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs65/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs75/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs79/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs84/st3/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs9/st1/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs9/st2/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs9/st3/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs9/st4/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs9/st5/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs9/st6/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs9/st7/Statement.md
+Non matching title or couldnt retrieve: /Users/Nate/_src/yamltest/with/qs95/st6/Statement.md
