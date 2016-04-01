@@ -29,14 +29,13 @@ with
       { StatementNo = statementNumberGenerator.Next(16)
         StandardNo = standardNumberGenerator.Next(120) }
 
-    static member private GenerateUriNiceOrg =
-        let vals = Standard.GetRandomNumbers
-        match vals with
+    static member private GenerateUriNiceOrg (standard:Standard) =
+        match standard with
             | { Standard.StatementNo = statementNo; Standard.StandardNo = standardNo } ->
-                (vals,sprintf "https://www.nice.org.uk/guidance/qs%s/chapter/quality-statement-%s" (string standardNo) (string statementNo))
+                sprintf "https://www.nice.org.uk/guidance/qs%s/chapter/quality-statement-%s" (string standardNo) (string statementNo)
 
-    static member GenerateUriDiscoveryTool (Standard:Standard) =
-        Standard |> (fun x ->
+    static member GenerateUriDiscoveryTool (standard:Standard) =
+        standard |> (fun x ->
                      match x with
                      | { StandardNo = standardNo; StatementNo = statementNo} ->
                            sprintf "https://ld.nice.org.uk/qualitystandards/qs%s/st%s/Statement.html" (string standardNo) (string statementNo))
@@ -44,16 +43,30 @@ with
     static member WriteCsv =
         use sw = new System.IO.StreamWriter("10percent.csv", false)
         sw.WriteLine("Nice Url,Discovery Tool Url, Standard No, Statement No")
+        for data in stack do
+            match data with
+                | { StatementNo = stNo; StandardNo = stdNo; DiscoveryToolUri = dsUri; NiceOrgUri = niceUri} ->
+                    sw.WriteLine((niceUri + "," + dsUri + "," + (string stdNo) + "," + (string stNo)))
 
     static member Generate10Percent =
-        while(dict.Count < 88) do
+        while(stack.Count < 88) do
+            let standard = Standard.GetRandomNumbers
+            let dsUri = Standard.GenerateUriDiscoveryTool standard
+            let niceUri =  Standard.GenerateUriNiceOrg standard
             async{
                 try
-                  let standard,uri = Standard.GenerateUriNiceOrg
-                  let! data = Http.AsyncRequest(uri, httpMethod = "HEAD")
+                  let! data = Http.AsyncRequest(niceUri, httpMethod = "HEAD")
                   if(data.StatusCode = 200) then
-                    (standard,uri) |> ignore
+                    let data =
+                        match standard with
+                          | { StandardNo = stdNo; StatementNo = stNo } ->
+                            { StatementNo = stNo; StandardNo = stdNo; NiceOrgUri = niceUri; DiscoveryToolUri = dsUri}
+
+                    stack.Push(data) |> ignore
                 with
                   | :? System.Net.WebException -> ()
                 } |> Async.RunSynchronously
-            printfn "%d" dict.Count
+            Standard.WriteCsv
+
+
+Standard.Generate10Percent
