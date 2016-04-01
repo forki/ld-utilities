@@ -85,11 +85,11 @@ for standard in Standard.List do
         writeFile (statementPath ++ "Statement.html") html
 
 
-Statement.List "qs9"
+Statement.List "qs120"
 
 
-let standardPath = writePath ++ ("qs9" + "/")
-let statements = Statement.List "qs9" |> filterUnrequired
+let standardPath = writePath ++ ("qs120" + "/")
+let statements = Statement.List "qs120" |> filterUnrequired
 for statement in statements do
   let statementPath = standardPath ++ ("st" + string statement.Index)
   createDirectory statementPath
