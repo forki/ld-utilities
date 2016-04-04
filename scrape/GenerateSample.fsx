@@ -26,8 +26,8 @@ with
     static member private GetRandomNumbers =
       let statementNumberGenerator = System.Random()
       let standardNumberGenerator = System.Random()
-      { StatementNo = statementNumberGenerator.Next(16)
-        StandardNo = standardNumberGenerator.Next(120) }
+      { StatementNo = statementNumberGenerator.Next(1,16)
+        StandardNo = standardNumberGenerator.Next(1,120) }
 
     static member private GenerateUriNiceOrg (standard:Standard) =
         match standard with
@@ -57,6 +57,7 @@ with
                 try
                   let! data = Http.AsyncRequest(niceUri, httpMethod = "HEAD")
                   if(data.StatusCode = 200) then
+                    printfn "%A" standard
                     let data =
                         match standard with
                           | { StandardNo = stdNo; StatementNo = stNo } ->
