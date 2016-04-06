@@ -16,6 +16,7 @@ type Data =
 
 let stack = new Stack<Data>()
 
+
 type Standard =
     {
         StatementNo : int
@@ -24,8 +25,8 @@ type Standard =
 with
 
     static member private GetRandomNumbers =
-      let statementNumberGenerator = System.Random()
-      let standardNumberGenerator = System.Random()
+      let statementNumberGenerator = System.Random(Guid.NewGuid().GetHashCode())
+      let standardNumberGenerator = System.Random(Guid.NewGuid().GetHashCode())
       { StatementNo = statementNumberGenerator.Next(1,16)
         StandardNo = standardNumberGenerator.Next(1,120) }
 
@@ -75,3 +76,8 @@ with
 
 
 Standard.Generate10Percent
+
+open System
+let rand = new Random(Guid.NewGuid().GetHashCode());
+rand.Next()
+
