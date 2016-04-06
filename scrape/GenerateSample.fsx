@@ -2,7 +2,7 @@
 
 open System
 open FSharp.Data
-open System.Collections.Concurrent
+open System.Collections.Generic
 
 System.Net.ServicePointManager.DefaultConnectionLimit <- System.Int32.MaxValue
 
@@ -14,7 +14,7 @@ type Data =
         NiceOrgUri : string
     }
 
-let stack = new ConcurrentStack<Data>()
+let stack = new Stack<Data>()
 
 type Standard =
     {
@@ -57,13 +57,17 @@ with
                 try
                   let! data = Http.AsyncRequest(niceUri, httpMethod = "HEAD")
                   if(data.StatusCode = 200) then
-                    printfn "%A" standard
                     let data =
                         match standard with
                           | { StandardNo = stdNo; StatementNo = stNo } ->
                             { StatementNo = stNo; StandardNo = stdNo; NiceOrgUri = niceUri; DiscoveryToolUri = dsUri}
 
-                    stack.Push(data) |> ignore
+                    if(stack.Contains(data)) then
+                      printfn "Dup: %A" data
+                      ()
+                    else
+                      printfn "%A" data
+                      stack.Push(data) |> ignore
                 with
                   | :? System.Net.WebException -> ()
                 } |> Async.RunSynchronously
