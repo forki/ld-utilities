@@ -76,8 +76,3 @@ with
 
 
 Standard.Generate10Percent
-
-open System
-let rand = new Random(Guid.NewGuid().GetHashCode());
-rand.Next()
-
