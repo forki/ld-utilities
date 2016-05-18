@@ -1,9 +1,9 @@
 module Providers
-#r "/Users/Nate/_src/ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.DesignTime.dll"
-#r "/Users/Nate/_src/ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#r "../../ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.DesignTime.dll"
+#r "../../ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 open FSharp.Data
 
-let workingDir = "/Users/Nate/_src/2016/qualitystandards/"
+let workingDir = "../../2016/qualitystandards/"
 
 //List all Standards
 let listOfQStandards = "https://api.import.io/store/data/d5c4f2ed-2def-40aa-976b-9101273a8158/_query?input/webpage/url=https://www.nice.org.uk/guidance/published?type=QS&_user=cf365766-2253-418e-9458-ab6538072d48&_apikey=cf365766-2253-418e-9458-ab6538072d48:8iSrRwgL6EfotgMTWPtGera0umY0VrehTwnfaA7T8inZoWaDHlcnYXo0VSDVGr0dolgDlgRxuJQ73dAfrklf5g=="

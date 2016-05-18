@@ -1,4 +1,4 @@
-#r "/Users/Nate/_src/ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#r "../../ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 
 open System
 open FSharp.Data

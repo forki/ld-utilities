@@ -1,4 +1,4 @@
-#I "/Users/Nate/_src/ld-utilities/packages/NICE.Freya/tools/"
+#I "../../packages/NICE.Freya/tools/"
 #r "UnionArgParser.dll"
 #r "FSharp.Markdown.dll"
 #r "IKVM.OpenJDK.Core.dll"
@@ -20,7 +20,6 @@ open System.Text
 
 let mismatch = System.Collections.Generic.List<string>()
 let placeholder = System.Collections.Generic.List<string>()
-
 type Files =
     // string (without) * string (with)
     | Exists of string * string * string
@@ -32,8 +31,8 @@ with
         let withAnnon =
             Files.WithoutAnnotations
             |> List.map(fun file -> file.Replace("without", "with"))
-            |> List.map(fun file -> fileExists file )
-            |> List.choose id
+            // |> List.map(fun file -> fileExists file )
+            // |> List.choose id
         withAnnon |> List.map(fun path -> Exists(path.Replace("with", "without"), path, path.Replace("with", "new")))
     static member MoveAnnotation =
         for file in Files.Exist do
@@ -57,9 +56,8 @@ with
                         mismatch.Add(sprintf "Non matching title or couldnt retrieve: %s" withAnn) |> ignore
 
 
-
 Files.MoveAnnotation
-
+Files.Exist
 printfn "%d" (mismatch |> Seq.toList |> List.length)
 for i in mismatch do
     printfn "%s" i

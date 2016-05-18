@@ -1,5 +1,4 @@
 #r "../../ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
-#r "../../ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 #load "Providers.fsx"
 
 open Providers
@@ -8,7 +7,7 @@ open System
 open System.IO
 open System.Text.RegularExpressions
 
-let writePath = "../../ld-statement-content/qualitystandard"
+let writePath = "../../ld-content-update/without/qualitystandards"
 
 let (++) x y = Path.Combine(x,y)
 let createDirectory path = if(not (Directory.Exists(path))) then Directory.CreateDirectory(path) |> ignore
@@ -56,7 +55,7 @@ with
         let mutable index = 1;
         let url =
           match standardNo with
-              | x when (x <= 14 && x <> 10 && x <> 9) ->
+              | x when (x <= 14 && x <> 10 && x <> 9 && x <> 2) ->
                   let uriBuilder = ListOfStatementsUrl qs
                   Regex.Replace(uriBuilder,"list-of-quality-statements",
                                               "list-of-statements", RegexOptions.IgnoreCase)
@@ -85,11 +84,11 @@ for standard in Standard.List do
         writeFile (statementPath ++ "Statement.html") html
 
 
-Statement.List "qs120"
+Statement.List "qs2"
 
 
-let standardPath = writePath ++ ("qs120" + "/")
-let statements = Statement.List "qs120" |> filterUnrequired
+let standardPath = writePath ++ ("qs2" + "/")
+let statements = Statement.List "qs2" |> filterUnrequired
 for statement in statements do
   let statementPath = standardPath ++ ("st" + string statement.Index)
   createDirectory statementPath

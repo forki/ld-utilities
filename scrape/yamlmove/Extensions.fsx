@@ -1,6 +1,6 @@
 module Extensions
 
-#I "/Users/Nate/_src/ld-utilities/packages/NICE.Freya/tools/"
+#I "../../packages/NICE.Freya/tools/"
 #r "FSharp.Markdown.dll"
 
 open System
@@ -8,7 +8,7 @@ open System.IO
 open System.Text
 open FSharp.Markdown
 
-let root = "/Users/Nate/_src/yamltest/"
+let root = "/Users/davidwong/projects/NICE/ld-content-update/"
 
 let (++) x y = Path.Combine(x,y)
 
