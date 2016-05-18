@@ -1,5 +1,5 @@
-#r "/Users/Nate/_src/ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
-#r "/Users/Nate/_src/ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#r "../../ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#r "../../ld-utilities/packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 #load "Providers.fsx"
 
 open Providers
@@ -8,7 +8,7 @@ open System
 open System.IO
 open System.Text.RegularExpressions
 
-let writePath = "/Users/Nate/_src/ld-statement-content/qualitystandard"
+let writePath = "../../ld-statement-content/qualitystandard"
 
 let (++) x y = Path.Combine(x,y)
 let createDirectory path = if(not (Directory.Exists(path))) then Directory.CreateDirectory(path) |> ignore
