@@ -4,12 +4,12 @@ nuget FSharp.Data
 nuget FSharp.Formatting 2.8.0
 nuget FSharp.RDF 
 nuget FSharpVSPowerTools.Core 1.7.0
+nuget NICE.Freya
 nuget NUnit
 nuget NUnit.Runners
 nuget FAKE
 nuget SourceLink.Fake
 nuget UnionArgParser
 nuget dotNetRDF
-
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx
